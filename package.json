@@ -1,0 +1,15 @@
+{
+  "name": "hackaweek",
+  "version": "1.0.0",
+  "description": "ticTacToeLearning",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "generate-js": "^2.1.1",
+    "generate-js-custom-element": "0.0.2"
+  }
+}
