@@ -186,7 +186,7 @@ function train() {
     console.log('done: %s%', parseInt(sampleIndex/vvv.length*10000)/100);
     console.log('error: %s%', parseInt(aveError/500*10000)/100);
 
-    if (sampleIndex < 1 && vvv.length) {
+    if (sampleIndex < vvv.length) {
         setTimeout(train, 0);
     }
 }
