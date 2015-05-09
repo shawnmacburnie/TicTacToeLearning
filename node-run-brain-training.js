@@ -117,7 +117,7 @@ var d = Date.now();
 for (var i = 0; i < vvv.length; i++) {
     if (i%10 === 0) {
         console.log('time: ', (Date.now()-d)/1000/60);
-        console.log('done: ', parseInt(i/vvv.length)*10000)/10000);
+        console.log('done: ', parseInt(i/vvv.length*10000)/10000);
     }
     net.feedForward(vvv[i].slice(0,9));
     net.backPropigate(vvv[i].slice(-2));
