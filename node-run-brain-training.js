@@ -120,11 +120,11 @@ cc(function (arr, print) {
 });
 var d = Date.now();
 var p = parseInt(vvv.length*0.0001);
-for (var i = 0; i < 1; i++) {
-    // if (i % p === 0 || i === vvv.length - 1) {
+for (var i = 0; i < vvv.length; i++) {
+    if (i % p === 0 || i === vvv.length - 1) {
         console.log('time: %sm', (Date.now()-d)/1000/60);
         console.log('done: %s%', parseInt(i/vvv.length*10000)/100);
-    // }
+    }
     net.feedForward(vvv[i].slice(0,9));
     net.backPropigate(vvv[i].slice(-2));
 }
