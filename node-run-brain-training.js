@@ -188,6 +188,13 @@ function train() {
 
     if (sampleIndex < vvv.length) {
         setTimeout(train, 0);
+    } else {
+        console.log('time: %sm', (Date.now()-d)/1000/60);
+        console.log('done: 100%');
+        console.log('total error: %s%', parseInt(totalError/vvv.length*10000)/100);
+
+        setTimeout(saveBrain, 0);
+        setTimeout(start, 0);
     }
 }
 
@@ -205,13 +212,6 @@ function start() {
              .scramble();
 
     train();
-
-    console.log('time: %sm', (Date.now()-d)/1000/60);
-    console.log('done: 100%');
-    console.log('total error: %s%', parseInt(totalError/vvv.length*10000)/100);
-
-    setTimeout(saveBrain, 0);
-    setTimeout(start, 0);
 }
 
 start();
