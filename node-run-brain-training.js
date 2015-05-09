@@ -119,7 +119,7 @@ cc(function (arr, print) {
     return print;
 });
 var d = Date.now();
-var p = parseInt(vvv.length*0.0001);
+var p = parseInt(vvv.length*0.001);
 for (var i = 0; i < vvv.length; i++) {
     if (i % p === 0 || i === vvv.length - 1) {
         console.log('time: %sm', (Date.now()-d)/1000/60);
