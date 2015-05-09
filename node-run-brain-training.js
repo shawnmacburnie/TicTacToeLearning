@@ -138,13 +138,17 @@ console.log('time: %sm', (Date.now()-d)/1000/60);
 console.log('done: %s%', parseInt(sampleIndex/vvv.length*10000)/100);
 
 function train() {
+    var aveError = 0;
     for (var i = 0; i < 500 && sampleIndex < vvv.length; i++, sampleIndex++) {
         net.feedForward(vvv[sampleIndex].slice(0,9));
         net.backPropigate(vvv[sampleIndex].slice(-2));
+        aveError+=net.error;
     }
+
 
     console.log('time: %sm', (Date.now()-d)/1000/60);
     console.log('done: %s%', parseInt(sampleIndex/vvv.length*10000)/100);
+    console.log('error: %s%', parseInt(aveError/500*10000)/100);
 
     if (sampleIndex < vvv.length) {
         setTimeout(train, 0);
