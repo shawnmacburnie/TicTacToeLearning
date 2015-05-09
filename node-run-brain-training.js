@@ -9,6 +9,30 @@ try {
     console.log('creating new brain...');
 }
 
+var exiting = false;
+
+function exitFunc() {
+    if (exiting) return;
+    exiting = true;
+    saveBrain();
+    process.exit();
+}
+
+function saveBrain() {
+    console.log('saving brain to file...');
+    fs.writeFileSync('./net-data.json', JSON.stringify(net));
+}
+
+//do something when app is closing
+process.on('exit', exitFunc);
+
+//catches ctrl+c event
+process.on('SIGINT', exitFunc);
+
+//catches uncaught exceptions
+// process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+
+
 function cc(func) {
     var a = 0,
         b = 0,
@@ -58,6 +82,21 @@ Array.prototype.evens = function() {
         evens.push(this[i]);
     }
     return evens;
+};
+
+Array.prototype.scramble = function scramble() {
+    var arr = [];
+
+    for (var i = 0, j = this.length - 1; i < j; i++, j--) {
+        if (Math.random() > 0.5) {
+            arr.push(this[i]);
+            arr.push(this[j]);
+        } else {
+            arr.push(this[j]);
+            arr.push(this[i]);
+        }
+    }
+    return arr;
 };
 
 function pb (a) {
@@ -131,11 +170,7 @@ try {
 var d = Date.now();
 
 var sampleIndex = 0;
-
-console.log('starting training...');
-
-console.log('time: %sm', (Date.now()-d)/1000/60);
-console.log('done: %s%', parseInt(sampleIndex/vvv.length*10000)/100);
+var totalError = 0;
 
 function train() {
     var aveError = 0;
@@ -143,6 +178,7 @@ function train() {
         net.feedForward(vvv[sampleIndex].slice(0,9));
         net.backPropigate(vvv[sampleIndex].slice(-2));
         aveError+=net.error;
+        totalError += net.error;
     }
 
 
@@ -150,29 +186,32 @@ function train() {
     console.log('done: %s%', parseInt(sampleIndex/vvv.length*10000)/100);
     console.log('error: %s%', parseInt(aveError/500*10000)/100);
 
-    if (sampleIndex < vvv.length) {
+    if (sampleIndex < 1 && vvv.length) {
         setTimeout(train, 0);
     }
 }
 
-var exiting = false;
+function start() {
+    console.log('starting training...');
+    sampleIndex = 0;
+    totalError = 0;
 
-function saveBrain() {
-    if (exiting) return;
-    exiting = true;
-    console.log('saving brain to file...');
-    fs.writeFileSync('./net-data.json', JSON.stringify(net));
-    process.exit();
+    d = Date.now();
+
+    vvv = vvv.scramble()
+             .scramble()
+             .scramble()
+             .scramble()
+             .scramble();
+
+    train();
+
+    console.log('time: %sm', (Date.now()-d)/1000/60);
+    console.log('done: 100%');
+    console.log('total error: %s%', parseInt(totalError/vvv.length*10000)/100);
+
+    setTimeout(saveBrain, 0);
+    setTimeout(start, 0);
 }
 
-//do something when app is closing
-process.on('exit', saveBrain);
-
-//catches ctrl+c event
-process.on('SIGINT', saveBrain);
-
-//catches uncaught exceptions
-// process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
-
-train();
-
+start();
