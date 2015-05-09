@@ -3,10 +3,10 @@ Net = require('../neurona/brain/net');
 fs = require('fs');
 try {
     var net = Net.from(require('./net-data.json'));
-    console.log('loading from file...');
+    console.log('loading brain from file...');
 } catch (e) {
     var net = new Net([9, 9*9, 9*9*9, 9*9, 2]);
-    console.log('creating new net...');
+    console.log('creating new brain...');
 }
 
 function cc(func) {
@@ -66,67 +66,109 @@ function pb (a) {
     console.log(a.slice(6,9).join(' ').replace(/\-1/g, 'O').replace(/1/g, 'X').replace(/0/g, ' '));
 }
 
+try {
+    var vvv = require('./net-training-data.json');
+    console.log('loading training data from file...');
+} catch (e) {
+    console.log('creating new training data...');
+    var xwins = 0;
+    var owins = 0;
+    var vvv = [];
 
-var xwins = 0;
-var owins = 0;
-var vvv = [];
+    cc(function (arr, print) {
+        var xwon = false, owon = false,
+        xpos = arr.evens().sort().join(''), opos = arr.odds().sort().join('');
 
-cc(function (arr, print) {
-    var xwon = false, owon = false,
-    xpos = arr.evens().sort().join(''), opos = arr.odds().sort().join('');
-
-    if (
-        (xpos.indexOf('012') !== -1) ||
-        (xpos.indexOf('345') !== -1) ||
-        (xpos.indexOf('678') !== -1) ||
-        (xpos.indexOf('036') !== -1) ||
-        (xpos.indexOf('147') !== -1) ||
-        (xpos.indexOf('258') !== -1) ||
-        (xpos.indexOf('048') !== -1) ||
-        (xpos.indexOf('246') !== -1)
-    ) xwins+=+(print = xwon = true);
-    if (
-        (opos.indexOf('012') !== -1) ||
-        (opos.indexOf('345') !== -1) ||
-        (opos.indexOf('678') !== -1) ||
-        (opos.indexOf('036') !== -1) ||
-        (opos.indexOf('147') !== -1) ||
-        (opos.indexOf('258') !== -1) ||
-        (opos.indexOf('048') !== -1) ||
-        (opos.indexOf('246') !== -1)
-    ) owins+=+(print = owon = true);
+        if (
+            (xpos.indexOf('012') !== -1) ||
+            (xpos.indexOf('345') !== -1) ||
+            (xpos.indexOf('678') !== -1) ||
+            (xpos.indexOf('036') !== -1) ||
+            (xpos.indexOf('147') !== -1) ||
+            (xpos.indexOf('258') !== -1) ||
+            (xpos.indexOf('048') !== -1) ||
+            (xpos.indexOf('246') !== -1)
+        ) xwins+=+(print = xwon = true);
+        if (
+            (opos.indexOf('012') !== -1) ||
+            (opos.indexOf('345') !== -1) ||
+            (opos.indexOf('678') !== -1) ||
+            (opos.indexOf('036') !== -1) ||
+            (opos.indexOf('147') !== -1) ||
+            (opos.indexOf('258') !== -1) ||
+            (opos.indexOf('048') !== -1) ||
+            (opos.indexOf('246') !== -1)
+        ) owins+=+(print = owon = true);
 
 
 
-// print
-    if (print) {
-        var n = [ 0, 0, 0,
-                  0, 0, 0,
-                  0, 0, 0,
-                  xwon ? 1 : -1,
-                  owon ? 1 : -1  ];
-        for (var i = xpos.length - 1; i >= 0; i--) {
-            n[xpos[i]] = 1;
+    // print
+        if (print) {
+            var n = [ 0, 0, 0,
+                      0, 0, 0,
+                      0, 0, 0,
+                      xwon ? 1 : -1,
+                      owon ? 1 : -1  ];
+            for (var i = xpos.length - 1; i >= 0; i--) {
+                n[xpos[i]] = 1;
+            }
+            for (var i = opos.length - 1; i >= 0; i--) {
+                n[opos[i]] = -1;
+            }
+            vvv.push(n);
+
+            //net.feedForward(n);
+            //net.backPropigate([+xwon, +owon]);
         }
-        for (var i = opos.length - 1; i >= 0; i--) {
-            n[opos[i]] = -1;
-        }
-        vvv.push(n);
+        return print;
+    });
 
-        //net.feedForward(n);
-        //net.backPropigate([+xwon, +owon]);
-    }
-    return print;
-});
-var d = Date.now();
-var p = parseInt(vvv.length*0.001);
-for (var i = 0; i < vvv.length; i++) {
-    if (i % p === 0 || i === vvv.length - 1) {
-        console.log('time: %sm', (Date.now()-d)/1000/60);
-        console.log('done: %s%', parseInt(i/vvv.length*10000)/100);
-    }
-    net.feedForward(vvv[i].slice(0,9));
-    net.backPropigate(vvv[i].slice(-2));
+    console.log('saving training data to file...');
+    fs.writeFileSync('./net-training-data.json', JSON.stringify(vvv));
+
 }
 
-fs.writeFileSync('./net-data.json', JSON.stringify(net));
+var d = Date.now();
+
+var sampleIndex = 0;
+
+console.log('starting training...');
+
+console.log('time: %sm', (Date.now()-d)/1000/60);
+console.log('done: %s%', parseInt(sampleIndex/vvv.length*10000)/100);
+
+function train() {
+    for (var i = 0; i < 500 && sampleIndex < vvv.length; i++, sampleIndex++) {
+        net.feedForward(vvv[sampleIndex].slice(0,9));
+        net.backPropigate(vvv[sampleIndex].slice(-2));
+    }
+
+    console.log('time: %sm', (Date.now()-d)/1000/60);
+    console.log('done: %s%', parseInt(sampleIndex/vvv.length*10000)/100);
+
+    if (sampleIndex < vvv.length) {
+        setTimeout(train, 0);
+    }
+}
+
+var exiting = false;
+
+function saveBrain() {
+    if (exiting) return;
+    exiting = true;
+    console.log('saving brain to file...');
+    fs.writeFileSync('./net-data.json', JSON.stringify(net));
+    process.exit();
+}
+
+//do something when app is closing
+process.on('exit', saveBrain);
+
+//catches ctrl+c event
+process.on('SIGINT', saveBrain);
+
+//catches uncaught exceptions
+// process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+
+train();
+
