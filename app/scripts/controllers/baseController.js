@@ -1,16 +1,10 @@
 'use strict';
 
 angular.module('hackaweek2App')
-  .controller('BaseController', function ($scope, $state) {
-    $('.dropdown-toggle').dropdown();
+    .controller('BaseController', function($scope, $state) {
+        $('.dropdown-toggle').dropdown();
         $scope.headerViews = {
             calendar: false,
-            analytics: false,
-            account: false,
-            support: false,
-            messaging: false,
-            pendingStatus: false,
-            timeSlots: false
         };
 
         $scope.changeState = function(state) {
@@ -26,18 +20,4 @@ angular.module('hackaweek2App')
                 }
             }
         };
-
-        var turn = true;
-        $scope.board = [["","",""],["","",""],["","",""]]
-        $scope.boardClicked = function(row, col){
-            if (!$scope.board[row][col]) {
-                if (turn) {
-                    $scope.board[row][col] = "X";
-                    turn = !turn;
-                } else {
-                    $scope.board[row][col] = "O";
-                    turn = !turn;
-                }
-            }
-        };
-  });
+    });

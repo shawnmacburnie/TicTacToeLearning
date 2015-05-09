@@ -19,22 +19,22 @@ angular
     'ui.router',
     'ui.bootstrap'
   ])
-  .config(function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
+  .config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/about');
     $stateProvider
       .state('base', {
-        url: '/base',
+        url: '/',
         templateUrl: 'views/header.html',
         controller: 'BaseController'
       })
-      .state('home', {
-        url: '/',
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .state('about', {
-        url: '/about',
+      .state('base.about', {
+        url: '^/about',
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
+      })
+      .state('base.easyGame', {
+        url: '^/easy',
+        templateUrl: 'views/easyGame.html',
+        controller: 'EasyGameController'
       });
   });
