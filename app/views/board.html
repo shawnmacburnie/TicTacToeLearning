@@ -1,0 +1,9 @@
+<div class="container">
+    <div ng-repeat="row in board track by $index">
+      <div class="row">
+        <div class="col-xs-4 board-item text-center" ng-repeat="col in row track by $index" ng-click="boardClicked($parent.$index,$index)">
+            {{col}}
+        </div>
+      </div>
+    </div>
+</div>

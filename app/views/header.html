@@ -1,0 +1,29 @@
+<div class="head">
+    <nav class="navbar navbar-default fixed-height">
+      <div class="container-fluid">
+        <div class="navbar-header">
+            <h2>Tic Tac Toe Learning</h2>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="text-center" ng-class="{active: headerViews.calendar}"><a class="nav-item-padding" ng-click="changeState('calendar')"><span class="glyphicon glyphicon-calendar"></span><br>Calendar</a></li>
+
+            <li class="dropdown">
+              <a class="dropdown-toggle active text-center nav-item-padding" data-toggle="dropdown" role="button" aria-expanded="false" id="account-dropDown"><span class="glyphicon glyphicon-user"></span><br> Account <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a ng-click="changeState('accountInfo')">Account Info</a></li>
+                <li><a ng-click="changeState('practitioners')">Manage Practitioners</a></li>
+                <li class="divider"></li>
+                <li><a ng-click="logout()">Logout</a></li>
+              </ul>
+            </li>
+
+          </ul>
+      </div>
+    </nav>
+</div>
+<div class="container">
+  <div ui-view></div>
+  <div ng-include="'views/board.html'"></div>
+</div>

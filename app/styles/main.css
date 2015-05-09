@@ -1,6 +1,5 @@
 /* Space out content a bit */
 body {
-  padding-top: 20px;
   padding-bottom: 20px;
 }
 
@@ -10,6 +9,13 @@ body {
 .footer {
   padding-left: 15px;
   padding-right: 15px;
+}
+
+.board-item {
+    border:1px solid black;
+    height:100px;
+    font-size: 72px;
+    font-family: Georgia, Serif;
 }
 
 /* Custom page header */
