@@ -91,4 +91,4 @@ cc(function (arr, print) {
     return print;
 });
 
-console.log(xwins, owins);
+//console.log(xwins, owins);
