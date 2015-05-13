@@ -1,11 +1,25 @@
 Net = require('../neurona/brain/net');
 
 fs = require('fs');
+var netStats = {
+    brain: 0,
+    errors:[[]]
+};
+var net = new Net([9, 81, 81, 81, 9]);
+
 try {
-    var net = Net.from(require('./net-data.json'));
-    console.log('loading brain from file...');
+    netStats = require('./net-stats.json');
+    console.log('loading stats from file...');
 } catch (e) {
-    var net = new Net([9, 9*9, 9*9*9, 9*9, 2]);
+    console.log('creating new stats...');
+}
+
+console.log(netStats)
+
+try {
+    net = Net.from(require('./net-brain-'+netStats.brain+'.json'));
+    console.log('loading brain from file: ./net-brain-'+netStats.brain+'.json');
+} catch (e) {
     console.log('creating new brain...');
 }
 
@@ -15,12 +29,19 @@ function exitFunc() {
     if (exiting) return;
     exiting = true;
     saveBrain();
+    // throw new Error('why?')
     process.exit();
+}
+function saveStats() {
+    netStats.brain++;
+    netStats.errors.push([]);
+    console.log('saving stats to file...');
+    fs.writeFileSync('./net-stats.json', JSON.stringify(netStats));
 }
 
 function saveBrain() {
     console.log('saving brain to file...');
-    fs.writeFileSync('./net-data.json', JSON.stringify(net));
+    fs.writeFileSync('./net-brain-'+netStats.brain+'.json', JSON.stringify(net));
 }
 
 //do something when app is closing
@@ -86,8 +107,9 @@ Array.prototype.evens = function() {
 
 Array.prototype.scramble = function scramble() {
     var arr = [];
+    var isEven = this.length % 2 === 0;
 
-    for (var i = 0, j = this.length - 1; i < j; i++, j--) {
+    for (var i = isEven ? 0 : 1, j = this.length - 1; i < j; i++, j--) {
         if (Math.random() > 0.5) {
             arr.push(this[i]);
             arr.push(this[j]);
@@ -96,6 +118,11 @@ Array.prototype.scramble = function scramble() {
             arr.push(this[i]);
         }
     }
+
+    if (!isEven) {
+        arr.splice( parseInt(Math.random() * arr.length), 0, this[0] )
+    }
+
     return arr;
 };
 
@@ -139,22 +166,23 @@ try {
             (opos.indexOf('246') !== -1)
         ) owins+=+(print = owon = true);
 
-
-
     // print
-        if (print) {
-            var n = [ 0, 0, 0,
-                      0, 0, 0,
-                      0, 0, 0,
-                      xwon ? 1 : -1,
-                      owon ? 1 : -1  ];
-            for (var i = xpos.length - 1; i >= 0; i--) {
-                n[xpos[i]] = 1;
-            }
-            for (var i = opos.length - 1; i >= 0; i--) {
-                n[opos[i]] = -1;
-            }
-            vvv.push(n);
+        if (print&&(xwon||owon)) {
+            // var n = [ 0, 0, 0,
+            //           0, 0, 0,
+            //           0, 0, 0,
+            //           xwon ? 1 : -1,
+            //           owon ? 1 : -1  ];
+            // for (var i = xpos.length - 1; i >= 0; i--) {
+            //     n[xpos[i]] = 1;
+            // }
+            // for (var i = opos.length - 1; i >= 0; i--) {
+            //     n[opos[i]] = -1;
+            // }
+            // vvv.push(n);
+
+            arr.push(+xwon);
+            vvv.push(arr);
 
             //net.feedForward(n);
             //net.backPropigate([+xwon, +owon]);
@@ -167,24 +195,64 @@ try {
 
 }
 
+function getSamples(sampleIndex, inputs) {
+    var arr = vvv[sampleIndex];
+
+    arrB = [0,0,0, 0,0,0, 0,0,0];
+    for (var i = 0; i < inputs && i < arr.length-1; i++) {
+        arrB[arr[i]] = arr[arr.length-1]%2===0 ? (i%2===0?1:-1): (i%2===0?-1:1);
+    }
+    return arrB;
+}
+
+function getSamplesBack(sampleIndex, inputs, outputs) {
+    var arr = vvv[sampleIndex];
+
+    arrB = [0,0,0, 0,0,0, 0,0,0];
+    for (var i = 0; i < 9; i++) {
+        arrB[arr[i]] = arr[arr.length-1]%2===0 ? (i%2===0?1:-1): (i%2===0?-1:1);
+    }
+    for (var i = outputs.length - 1; i >= 0; i--) {
+        if (outputs[i] > 0 && arrB[i] > 0) {
+            outputs[i] = 1;
+        } else {
+            outputs[i] = 0;
+        }
+    }
+    for (var i = 0; i < inputs; i++) {
+        outputs[arr[i]] = -1;
+    }
+    return outputs;
+}
+
 var d = Date.now();
 
 var sampleIndex = 0;
 var totalError = 0;
+var firsts = [0,2,4,6,8];
+var seconds = [1,3,5,7];
 
 function train() {
+
     var aveError = 0;
     for (var i = 0; i < 500 && sampleIndex < vvv.length; i++, sampleIndex++) {
-        net.feedForward(vvv[sampleIndex].slice(0,9));
-        net.backPropigate(vvv[sampleIndex].slice(-2));
-        aveError+=net.error;
+        var length = vvv[sampleIndex].length - 2;
+        var first = vvv[sampleIndex][length + 1];
+        var inputs = first?firsts[sampleIndex%5]:seconds[sampleIndex%4];
+        var outputs = net.feedForward(getSamples(sampleIndex, inputs));
+        net.backPropigate(getSamplesBack(sampleIndex,inputs, outputs));
+        aveError += net.error;
         totalError += net.error;
     }
 
+    aveError = parseInt(aveError/500*10000)/100;
+    netStats.errors[netStats.brain].push(aveError);
 
     console.log('time: %sm', (Date.now()-d)/1000/60);
     console.log('done: %s%', parseInt(sampleIndex/vvv.length*10000)/100);
-    console.log('error: %s%', parseInt(aveError/500*10000)/100);
+    console.log('error: %s%', aveError);
+
+
 
     if (sampleIndex < vvv.length) {
         setTimeout(train, 0);
@@ -193,9 +261,14 @@ function train() {
         console.log('done: 100%');
         console.log('total error: %s%', parseInt(totalError/vvv.length*10000)/100);
 
-        setTimeout(saveBrain, 0);
+        saveBrain();
+        saveStats();
+
         setTimeout(start, 0);
+
     }
+
+
 }
 
 function start() {
@@ -212,6 +285,7 @@ function start() {
              .scramble();
 
     train();
+
 }
 
 start();
