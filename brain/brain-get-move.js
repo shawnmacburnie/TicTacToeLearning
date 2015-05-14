@@ -17,7 +17,7 @@ module.exports = function (brainId, moves, done) {
     var arrB = [];
 
     for (var i = 0; i < 9; i++) {
-        if (moves.indexOf(i) === -1) {
+        if (moves[i] === 0) {
             arrB.push(i);
         }
     }
@@ -27,7 +27,7 @@ module.exports = function (brainId, moves, done) {
 
     try {
         var net = Net.from(require('./training/net-brain-'+brainId+'.json'));
-        var raw = net.feedForward(getSamples(moves));
+        var raw = net.feedForward(moves);
         arrB = [];
     } catch (e) {
 

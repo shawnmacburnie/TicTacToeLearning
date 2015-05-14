@@ -5,7 +5,7 @@ var netStats = {
     brain: 0,
     errors:[[]]
 };
-var net = new Net([9, 9, 9, 9, 9, 9, 9, 9, 9, 9]);
+var net = new Net([9, 81, 81, 81, 81, 81, 81, 81, 81, 9]);
 
 try {
     netStats = require('./net-stats.json');
@@ -236,7 +236,7 @@ function train() {
     var aveError = 0;
     for (var i = 0; i < 500 && sampleIndex < vvv.length; i++, sampleIndex++) {
         var length = vvv[sampleIndex].length;
-        var inputs = length%2===0? 2:3;// || sampleIndex%(length-1);
+        var inputs = /*length%2===0? 2:3;*/ sampleIndex%(length-1);
         // console.log('inputs:', inputs)
 //
         // console.log('sample:', vvv[sampleIndex])
