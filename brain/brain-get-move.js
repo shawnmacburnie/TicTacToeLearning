@@ -38,7 +38,7 @@ module.exports = function (brainId, moves, done) {
     var arrB = [];
 
     for (var i = 0; i < 9; i++) {
-        if (moves[i] === 0) {
+        if (+moves[i] === 0) {
             arrB.push(i);
         }
     }
@@ -67,7 +67,7 @@ module.exports = function (brainId, moves, done) {
     var highest = -1;
 
     for (var i = 0; i < 9; i++) {
-        if (moves[i] === 0) {
+        if (+moves[i] === 0) {
             if (raw[i] > highest) {
                 highest = raw[i];
                 choice = i;
