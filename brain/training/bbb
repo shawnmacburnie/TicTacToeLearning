@@ -1,0 +1,42 @@
+Net = require('../brain/net');!1;
+brain = Net.from(require('./net-brain-1.json'));!1;
+
+function i(arr) {
+
+    var first = arr.length%2===0;
+
+    arrB = [0,0,0, 0,0,0, 0,0,0];
+    for (var i = 0; i < arr.length; i++) {
+        var even = i%2===0;
+
+        arrB[ arr[ i ] ] = first ? (even ? 1 : -1) : (even ? -1 : 1);
+    }
+    return arrB;
+}
+
+function outB(outputs) {
+    arrB = [0,0,0, 0,0,0, 0,0,0];
+    for (var i = 0; i < 9; i++) {
+        arrB[i] = outputs[i] > 0 ? 1: -1;
+    }
+    return arrB;
+};!1;
+
+function pb (a) {
+    console.log(a.slice(0,3).join(' ').replace(/\-1/g, 'O').replace(/1/g, 'X').replace(/0/g, ' '));
+    console.log(a.slice(3,6).join(' ').replace(/\-1/g, 'O').replace(/1/g, 'X').replace(/0/g, ' '));
+    console.log(a.slice(6,9).join(' ').replace(/\-1/g, 'O').replace(/1/g, 'X').replace(/0/g, ' '));
+};!1;
+
+function pbs (a) {
+    console.log(a.slice(0,3).join(' ').replace(/\-1/g, '!').replace(/1/g, 'X').replace(/0/g, ' '));
+    console.log(a.slice(3,6).join(' ').replace(/\-1/g, '!').replace(/1/g, 'X').replace(/0/g, ' '));
+    console.log(a.slice(6,9).join(' ').replace(/\-1/g, '!').replace(/1/g, 'X').replace(/0/g, ' '));
+};!1;
+
+function t(arr) {
+    var ins = i(arr);
+    pb(ins)
+    console.log(' ')
+    pbs(outB(brain.feedForward(ins)));
+};!1;
