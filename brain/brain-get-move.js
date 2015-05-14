@@ -1,4 +1,4 @@
-Net = require('../brain/net');
+Net = require('./brain/net');
 
 function getSamples(arr) {
 
