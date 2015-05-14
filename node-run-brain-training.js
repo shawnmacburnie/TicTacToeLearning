@@ -1,4 +1,4 @@
-Net = require('../brain/net');
+Net = require('./brain/net');
 
 fs = require('fs');
 var netStats = {
@@ -181,7 +181,7 @@ try {
             // }
             // vvv.push(n);
 
-
+            arr.push(+xwon);
             vvv.push(arr);
 
             //net.feedForward(n);
@@ -198,28 +198,27 @@ try {
 function getSamples(sampleIndex, inputs) {
     var arr = vvv[sampleIndex];
 
-    var first = arr.length%2===0;
-
     arrB = [0,0,0, 0,0,0, 0,0,0];
     for (var i = 0; i < inputs && i < arr.length-1; i++) {
-        var even = i%2===0;
-
-        arrB[ arr[ i ] ] = first ? (even ? 1 : -1) : (even ? -1 : 1);
+        arrB[arr[i]] = arr[arr.length-1]%2===0 ? (i%2===0?1:-1): (i%2===0?-1:1);
     }
     return arrB;
 }
 
 function getSamplesBack(sampleIndex, inputs, outputs) {
-    var arr = getSamples(sampleIndex, 9);
+    var arr = vvv[sampleIndex];
 
-    for (var i = 0; i < outputs.length; i++) {
-        if (arr[i] > 0) {
-            outputs[i] = arr[i];
+    arrB = [0,0,0, 0,0,0, 0,0,0];
+    for (var i = 0; i < 9; i++) {
+        arrB[arr[i]] = arr[arr.length-1]%2===0 ? (i%2===0?1:-1): (i%2===0?-1:1);
+    }
+    for (var i = outputs.length - 1; i >= 0; i--) {
+        if (outputs[i] > 0 && arrB[i] > 0) {
+            outputs[i] = 1;
         } else {
             outputs[i] = 0;
         }
     }
-    var arr = vvv[sampleIndex];
     for (var i = 0; i < inputs; i++) {
         outputs[arr[i]] = -1;
     }
@@ -230,32 +229,20 @@ var d = Date.now();
 
 var sampleIndex = 0;
 var totalError = 0;
+var firsts = [0,2,4,6,8];
+var seconds = [1,3,5,7];
 
 function train() {
-// sampleIndex=3
+
     var aveError = 0;
     for (var i = 0; i < 500 && sampleIndex < vvv.length; i++, sampleIndex++) {
-        var length = vvv[sampleIndex].length;
-        var inputs = length%2===0? 2:3;// || sampleIndex%(length-1);
-        // console.log('inputs:', inputs)
-//
-        // console.log('sample:', vvv[sampleIndex])
-//
-        // console.log('inputs:', getSamples(sampleIndex, inputs))
-
+        var length = vvv[sampleIndex].length - 2;
+        var first = vvv[sampleIndex][length + 1];
+        var inputs = first?firsts[sampleIndex%5]:seconds[sampleIndex%4];
         var outputs = net.feedForward(getSamples(sampleIndex, inputs));
-        // console.log('output:', outputs);
-        // console.log('backpr:', getSamplesBack(sampleIndex, inputs, outputs));
-        // return
-        net.backPropigate(getSamplesBack(sampleIndex, inputs, outputs));
-
+        net.backPropigate(getSamplesBack(sampleIndex,inputs, outputs));
         aveError += net.error;
         totalError += net.error;
-        if (Number.isNaN(aveError)) {
-            console.log('output:', outputs);
-            console.log('backpr:', getSamplesBack(sampleIndex, inputs, outputs));
-            return;
-        }
     }
 
     aveError = parseInt(aveError/500*10000)/100;
