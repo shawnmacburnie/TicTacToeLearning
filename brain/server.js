@@ -1,12 +1,9 @@
 var hapi = require('hapi'),
     Joi  = require('joi'),
     path = require('path'),
-    app  = new hapi.Server(),
+    app  = new hapi.Server(8080, {cors: true}),
 
     brainGetMove = require('./brain-get-move');
-
-app.connection({ port: 8080, labels: 'main' });
-
 
 app.route({
     method: 'POST',
