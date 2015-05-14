@@ -1,7 +1,7 @@
 var hapi = require('hapi'),
     Joi  = require('joi'),
     path = require('path'),
-    app  = new hapi.Server({cors: { origin : ['*'] }}),
+    app  = new hapi.Server(),
 
     brainGetMove = require('./brain-get-move');
 
