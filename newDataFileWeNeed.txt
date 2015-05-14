@@ -1,0 +1,67 @@
+=========================================
+Data Format:
+    * the first 2d array is what the board is
+    * the second line is input and expected output
+    * every combination line followed by indentation means
+      that every combination of the input letters
+
+Just a note that the data file is not completed and I did not have time to complete what it is going to look like. If you cannot figure out what I mean here I will have to show you.
+=========================================
+[
+[x,,x],
+[,,,],
+[,,,]
+]
+input = [1,0,1,0,0,0,0,0] || output = [0,1,0,0,0,0,0,0]
+everyCombination:
+    input = [a,b,c,0,0,0,0,0] || exactly 1 of {a,b,c} must be zero and other 2 must be 1. need every combination of this.
+
+[
+[,,],
+[x,,x],
+[,,]
+]
+input = [0,0,0,1,0,1,0,0] || output  = [0,0,0,0,1,0,0,0]
+
+[
+[x,,],
+[,,],
+[,,x]
+]
+input = [1,0,0,0,0,0,0,0,1] || output = [0,0,0,0,1,0,0,0,0]
+
+[
+[,,],
+[,x,],
+[,,x]
+]
+input = [0,0,0,0,1,0,0,0,1] || output = [1,0,0,0,0,0,0,0,0]
+
+[
+[x,,],
+[,x,],
+[,,]
+]
+input = [1,0,0,0,1,0,0,0,0] || output = [0,0,0,0,0,0,0,0,1]
+
+[
+[,,x],
+[,x,],
+[,,]
+]
+input = [0,0,1,0,1,0,0,0,0] || output = [0,0,0,0,0,0,0,0,1]
+
+[
+[,,x],
+[,x,],
+[,,]
+]
+input = [0,0,1,0,0,0,0,0,1] || output = [0,0,0,0,1,0,0,0,0]
+
+[
+[,,],
+[,x,],
+[x,,]
+]
+input = [0,0,0,0,1,0,0,0,1] || output = [0,0,1,0,0,0,0,0,0]
+

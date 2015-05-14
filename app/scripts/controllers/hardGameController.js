@@ -80,7 +80,14 @@ angular.module('hackaweek2App')
                 }
             }
             Restangular.service('get-move/' + 1).post({'moves': moves}).then(function(res,err) {
-                console.log(res);
+                var choice = res.choice;
+                var row = 0;
+                while (choice > 2) {
+                    choice -= 3;
+                    row++;
+                }
+                $scope.board[row][choice] = "O";
+                turn = !turn;
             });
             console.log("no valid move found");
             return true;
