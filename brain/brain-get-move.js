@@ -30,7 +30,7 @@ module.exports = function (brainId, moves, done) {
         var raw = net.feedForward(moves);
         arrB = [];
     } catch (e) {
-
+        raw = [];
     }
 
     var highest = -1;
