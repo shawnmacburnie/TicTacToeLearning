@@ -1,5 +1,26 @@
 Net = require('./brain/net');
 
+Array.prototype.scramble = function scramble() {
+    var arr = [];
+    var isEven = this.length % 2 === 0;
+
+    for (var i = isEven ? 0 : 1, j = this.length - 1; i < j; i++, j--) {
+        if (Math.random() > 0.5) {
+            arr.push(this[i]);
+            arr.push(this[j]);
+        } else {
+            arr.push(this[j]);
+            arr.push(this[i]);
+        }
+    }
+
+    if (!isEven) {
+        arr.splice( parseInt(Math.random() * arr.length), 0, this[0] )
+    }
+
+    return arr;
+};
+
 function getSamples(arr) {
 
     var first = arr.length%2===0;
@@ -30,7 +51,17 @@ module.exports = function (brainId, moves, done) {
         var raw = net.feedForward(moves);
         arrB = [];
     } catch (e) {
-        raw = [];
+        raw = [
+             1 * Math.random(),
+            -1 * Math.random(),
+             1 * Math.random(),
+            -1 * Math.random(),
+             1 * Math.random(),
+            -1 * Math.random(),
+             1 * Math.random(),
+            -1 * Math.random(),
+             1 * Math.random()
+        ].scramble();
     }
 
     var highest = -1;
