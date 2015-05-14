@@ -67,7 +67,7 @@ module.exports = function (brainId, moves, done) {
     var highest = -1;
 
     for (var i = 0; i < 9; i++) {
-        if (moves.indexOf(i) === -1) {
+        if (moves[i] === 0) {
             if (raw[i] > highest) {
                 highest = raw[i];
                 choice = i;
