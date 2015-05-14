@@ -1,18 +1,18 @@
 var hapi = require('hapi'),
     Joi  = require('joi'),
     path = require('path'),
-    app  = new hapi.Server(8080, {
-        cors: {
-            origin: ['*']
-        }
-    }),
+    app  = new hapi.Server({cors: { origin : ['*'] }}),
 
     brainGetMove = require('./brain-get-move');
+
+app.connection({ port: 8080, labels: 'main' , routes: {cors: true}});
+
 
 app.route({
     method: 'POST',
     path: '/get-move/{id*}',
     config: {
+        cors: { origin : ['*'] },
         handler: function(request, reply) {
             var params = request.params;
             var payload = request.payload;
