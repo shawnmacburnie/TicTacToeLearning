@@ -7,9 +7,15 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li class="text-center" ng-class="{active: headerViews.calendar}"><a class="nav-item-padding" ng-click="changeState('calendar')"><span class="glyphicon glyphicon-calendar"></span><br>Calendar</a></li>
+            <li class="text-center" ng-class="{active: headerViews.about}"><a class="nav-item-padding" ng-click="changeState('about')"><span class="glyphicon glyphicon-calendar"></span><br>About</a></li>
 
-            <li class="dropdown">
+            <li class="text-center" ng-class="{active: headerViews.easyGame}"><a class="nav-item-padding" ng-click="changeState('easyGame')"><span class="glyphicon glyphicon-calendar"></span><br>Easy Mode</a></li>
+
+            <li class="text-center" ng-class="{active: headerViews.easyGame}"><a class="nav-item-padding" ng-click="changeState('hardGame')"><span class="glyphicon glyphicon-calendar"></span><br>Hard Mode</a></li>
+
+            <li class="text-center" ng-class="{active: headerViews.login}"><a class="nav-item-padding" ng-click="changeState('login')"><span class="glyphicon glyphicon-user"></span><br>Login/Create</a></li>
+
+            <!-- <li class="dropdown">
               <a class="dropdown-toggle active text-center nav-item-padding" data-toggle="dropdown" role="button" aria-expanded="false" id="account-dropDown"><span class="glyphicon glyphicon-user"></span><br> Account <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li><a ng-click="changeState('accountInfo')">Account Info</a></li>
@@ -17,7 +23,7 @@
                 <li class="divider"></li>
                 <li><a ng-click="logout()">Logout</a></li>
               </ul>
-            </li>
+            </li> -->
 
           </ul>
       </div>

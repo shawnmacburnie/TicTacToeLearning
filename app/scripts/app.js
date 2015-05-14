@@ -17,7 +17,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'ui.router',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'restangular'
   ])
   .config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/about');
@@ -36,5 +37,13 @@ angular
         url: '^/easy',
         templateUrl: 'views/easyGame.html',
         controller: 'EasyGameController'
+      })
+      .state('base.hardGame', {
+        url: '^/hard',
+        templateUrl: 'views/hardGame.html',
+        controller: 'HardGameController'
       });
+  })
+  .run(function(Restangular) {
+    Restangular.setBaseUrl('http://mjong-dev.compilr.com');
   });
