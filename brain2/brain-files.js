@@ -18,6 +18,6 @@ exports.loadBrain = function loadBrain(brainId) {
 
 exports.saveBrain = function saveBrain(brainId, net) {
     var file = path.resolve('./brains', brainId);
-    fs.WriteFileSync(file, JSON.stringify(net.toJSON()));
+    fs.writeFileSync(file, JSON.stringify(net.toJSON()));
     delete brainCache[ brainId ];
 };
