@@ -55,15 +55,14 @@ module.exports = function getMove(brainId, moves, done) {
         choice = null;
 
     try {
-        raw = redunceSamples(
-            Brain
-            .loadBrain(
-                brainId
-            )
-            .activate(
-                getSamples(
-                    moves
-                )
+        raw =
+        Brain
+        .loadBrain(
+            brainId
+        )
+        .activate(
+            expandSamples(
+                moves
             )
         );
     } catch (e) {
