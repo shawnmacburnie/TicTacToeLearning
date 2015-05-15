@@ -1,5 +1,6 @@
 var Net = require('./net'),
-    brainFiles = require('./brain-files');
+    brainFiles = require('./brain-files'),
+    fs = require('fs');
 
 
 function expandSamples(arr) {
