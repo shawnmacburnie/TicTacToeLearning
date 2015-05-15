@@ -39,4 +39,6 @@ Net.fromJSON = function fromJSON(data) {
     return Network.fromJSON(data);
 };
 
+Net.Trainer = Trainer;
+
 module.exports = Net;
