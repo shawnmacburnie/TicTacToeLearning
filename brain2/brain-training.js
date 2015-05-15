@@ -36,5 +36,5 @@ var trainer = new Net.Trainer(net);
 
 trainer.train(trainingSet);
 
-brainFiles.saveBrain('one', net);
+brainFiles.saveBrain('1', net);
 
