@@ -32,14 +32,11 @@ for (var i = 0; i < data.length;i++) {
     trainingSet.push({input: /*expandSamples(*/input/*)*/, output: line});
 }
 
-console.log(    trainingSet);
-
 var net = Net(9,48,9);
 
 var trainer = new Net.Trainer(net);
-console.log(trainer);
 
-trainer.train(trainingSet, {log:100});
+trainer.train(trainingSet);
 
 brainFiles.saveBrain('1', net);
 
