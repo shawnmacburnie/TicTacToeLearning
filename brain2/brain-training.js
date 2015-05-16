@@ -24,18 +24,22 @@ var trainingSet = [];
 for (var i = 0; i < data.length;i++) {
     if (data[i][0] === '#') continue;
     var line = data[i].split(',');
+    if (line.length !== 18) continue;
     for (var x = 0; x < line.length;x++) {
         line[x] = parseInt(line[x]);
     }
     var input = line.splice(0,9);
-    trainingSet.push({input: expandSamples(input), output: line});
+    trainingSet.push({input: /*expandSamples(*/input/*)*/, output: line});
 }
 
-var net = Net(18,48,9);
+console.log(    trainingSet);
+
+var net = Net(9,48,9);
 
 var trainer = new Net.Trainer(net);
+console.log(trainer);
 
-trainer.train(trainingSet);
+trainer.train(trainingSet, {log:100});
 
 brainFiles.saveBrain('1', net);
 
