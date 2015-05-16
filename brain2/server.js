@@ -16,6 +16,7 @@ app.route({
         handler: function(request, reply) {
             var params = request.params;
             var payload = request.payload;
+            // console.log('asking for', params.id)
             brainGetMove(params.id, payload.moves, function (err, data) {
                 if (err) {
 

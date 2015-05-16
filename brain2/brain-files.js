@@ -5,13 +5,21 @@ var Net  = require('./net'),
     brainCache = {};
 
 exports.loadBrain = function loadBrain(brainId) {
+    // console.log('in');
     if (!brainCache[ brainId ]) {
-        var file = path.resolve('./brains', brainId),
-            brainFile = JSON.parse(fs.readFileSync(file));
-        console.log('Loaded brain form file: '+ file);
+        // console.log('no brain');
 
-        brainCache[ brainId ] = Net.fromJSON(brainFile);
+        var file = path.resolve('./brains', brainId),
+            brainFile = fs.readFileSync(file, 'utf8');
+        console.log('Loaded brain form file: '+ file);
+        // console.log(JSON.parse(brainFile))
+    // console.log('in b');
+
+        brainCache[ brainId ] = Net.fromJSON(JSON.parse(brainFile));
+    // console.log('in a');
     }
+
+        // console.log('brain', brainCache[ brainId ]);
 
     return brainCache[ brainId ];
 };

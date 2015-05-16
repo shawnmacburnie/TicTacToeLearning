@@ -1,21 +1,21 @@
 Brain = require('./brain-files');
 
-Array.prototype.scramble = function scramble() {
+function scramble(inarr) {
     var arr = [];
-    var isEven = this.length % 2 === 0;
+    var isEven = inarr.length % 2 === 0;
 
-    for (var i = isEven ? 0 : 1, j = this.length - 1; i < j; i++, j--) {
+    for (var i = isEven ? 0 : 1, j = inarr.length - 1; i < j; i++, j--) {
         if (Math.random() > 0.5) {
-            arr.push(this[i]);
-            arr.push(this[j]);
+            arr.push(inarr[i]);
+            arr.push(inarr[j]);
         } else {
-            arr.push(this[j]);
-            arr.push(this[i]);
+            arr.push(inarr[j]);
+            arr.push(inarr[i]);
         }
     }
 
     if (!isEven) {
-        arr.splice( parseInt(Math.random() * arr.length), 0, this[0] )
+        arr.splice( parseInt(Math.random() * arr.length), 0, inarr[0] )
     }
 
     return arr;
@@ -61,12 +61,13 @@ module.exports = function getMove(brainId, moves, done) {
             brainId
         )
         .activate(
-            expandSamples(
+            // expandSamples(
                 moves
-            )
+            // )
         );
     } catch (e) {
-        raw = [
+        throw e;
+        raw = scramble(scramble(scramble(scramble([
              1 * Math.random(),
             -1 * Math.random(),
              1 * Math.random(),
@@ -77,12 +78,7 @@ module.exports = function getMove(brainId, moves, done) {
             -1 * Math.random(),
              1 * Math.random(),
             -1 * Math.random()
-        ]
-        .scramble()
-        .scramble()
-        .scramble()
-        .scramble()
-        .scramble()
+        ]))))
         .slice(0,9);
     }
 
